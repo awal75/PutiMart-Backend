@@ -2,8 +2,15 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Product,Category
-from .serializers import ProductSerializer
+from .serializers import ProductSerializer,CategorySerializer
 from rest_framework import status
+
+
+@api_view()
+def api_categories(request):
+    categories=Category.objects.all()
+    serializer=CategorySerializer(categories,many=True)
+    return Response(serializer.data,status=status.HTTP_200_OK)
 
 @api_view()
 def view_specific_category(request,pk):
@@ -11,12 +18,21 @@ def view_specific_category(request,pk):
     category_dic={'id':category.id,'name':category.name,'description':category.description}
     return Response(category_dic)
 
-@api_view()
+@api_view(['GET','POST'])
 def api_products(request):
-    product=Product.objects.all()
-    serializer=ProductSerializer(product,many=True)
+    if request.method=='GET':
+        product=Product.objects.all()
+        serializer=ProductSerializer(product,many=True)
+        print(serializer.data[1])
 
-    return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    if request.method=='POST':
+        serializer=ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            print(serializer)
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view()
 def view_specific_product(request,pk):
