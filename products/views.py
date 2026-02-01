@@ -62,3 +62,19 @@ def view_specific_product(request,pk):
         # product_dict={'id':product.id,'name':product.name,'price':product.price,'category':{'id':product.category.id,'name':product.category.name}}
         serializer=ProductSerializer(product)
         return Response(serializer.data)
+    
+    if request.method=='PUT':
+        serializer=ProductSerializer(product,data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    if request.method=='PATCH':
+        serializer=ProductSerializer(product,data=request.data,partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    if request.method=='DELETE':
+        product.delete()
+        return Response({"detail": "Category deleted successfully."},status=status.HTTP_204_NO_CONTENT)
