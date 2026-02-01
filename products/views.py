@@ -53,9 +53,12 @@ def api_products(request):
         return Response(serializer.data,status=status.HTTP_201_CREATED)
         
 
-@api_view()
+@api_view(['GET','PUT','DELETE','PATCH'])
 def view_specific_product(request,pk):
 
     product=get_object_or_404(Product,pk=pk)
-    product_dict={'id':product.id,'name':product.name,'price':product.price,'category':{'id':product.category.id,'name':product.category.name}}
-    return Response(product_dict)
+    
+    if request.method=='GET':
+        # product_dict={'id':product.id,'name':product.name,'price':product.price,'category':{'id':product.category.id,'name':product.category.name}}
+        serializer=ProductSerializer(product)
+        return Response(serializer.data)
