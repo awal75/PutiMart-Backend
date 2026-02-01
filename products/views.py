@@ -6,11 +6,19 @@ from .serializers import ProductSerializer,CategorySerializer
 from rest_framework import status
 
 
-@api_view()
+@api_view(['GET','POST'])
 def api_categories(request):
-    categories=Category.objects.all()
-    serializer=CategorySerializer(categories,many=True)
-    return Response(serializer.data,status=status.HTTP_200_OK)
+    if request.method=='GET':
+        categories=Category.objects.all()
+        serializer=CategorySerializer(categories,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    if request.method=='POST':
+        serializer=CategorySerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+
 
 @api_view(['GET','PUT','DELETE','PATCH'])
 def view_specific_category(request,pk):
