@@ -12,11 +12,30 @@ def api_categories(request):
     serializer=CategorySerializer(categories,many=True)
     return Response(serializer.data,status=status.HTTP_200_OK)
 
-@api_view()
+@api_view(['GET','PUT','DELETE','PATCH'])
 def view_specific_category(request,pk):
     category=get_object_or_404(Category,pk=pk)
-    category_dic={'id':category.id,'name':category.name,'description':category.description}
-    return Response(category_dic)
+
+    if request.method=='GET':
+        # category_dic={'id':category.id,'name':category.name,'description':category.description}
+        serializer=CategorySerializer(category)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    if request.method=='PUT':
+        serializer=CategorySerializer(category,data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    if request.method=='PATCH':
+        serializer=CategorySerializer(category,data=request.data,partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    if request.method=='DELETE':
+        category.delete()
+        return Response({"detail": "Category deleted successfully."},status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET','POST'])
 def api_products(request):
@@ -24,15 +43,15 @@ def api_products(request):
         product=Product.objects.all()
         serializer=ProductSerializer(product,many=True)
         print(serializer.data[1])
-
         return Response(serializer.data,status=status.HTTP_200_OK)
+    
     if request.method=='POST':
         serializer=ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            print(serializer)
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        print(serializer)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+        
 
 @api_view()
 def view_specific_product(request,pk):
