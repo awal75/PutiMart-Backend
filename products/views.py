@@ -48,7 +48,16 @@ def view_specific_category(request,pk):
 @api_view(['GET','POST'])
 def api_products(request):
     if request.method=='GET':
+        search=request.GET.get('search',None)
+        category=request.GET.get('category',None)
+
         product=Product.objects.all()
+
+        if search:
+            product=product.filter() # name diye filter krte hbe
+        if category:
+            product=product.filter(category=category)
+
         serializer=ProductSerializer(product,many=True)
         print(serializer.data[1])
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -85,4 +94,4 @@ def view_specific_product(request,pk):
     
     if request.method=='DELETE':
         product.delete()
-        return Response({"detail": "Category deleted successfully."},status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail": "Product deleted successfully."},status=status.HTTP_204_NO_CONTENT)

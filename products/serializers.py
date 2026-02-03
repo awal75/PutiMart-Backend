@@ -23,12 +23,12 @@ class ProductSerializer(serializers.ModelSerializer):
     #  )
     price_tax=serializers.SerializerMethodField(
         method_name='get_price_with_tax',
-        read_only=True
     )
 
     class Meta:
         model=Product
         fields=['id','name','description','price','price_tax','stock','image','category','created_at','updated_at','is_active']
+        
 
     def get_price_with_tax(self,product):
         return round(product.price*Decimal('1.10'),2)
