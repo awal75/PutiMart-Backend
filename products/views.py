@@ -48,18 +48,18 @@ def view_specific_category(request,pk):
 @api_view(['GET','POST'])
 def api_products(request):
     if request.method=='GET':
-        search=request.GET.get('search',None)
-        category=request.GET.get('category',None)
+        search=request.GET.get('search')
+        category=request.GET.get('category')
+        print(request.query_params)
 
         product=Product.objects.all()
 
         if search:
-            product=product.filter() # name diye filter krte hbe
+            product=product.filter(name__icontains=search) # name diye filter krte hbe
         if category:
             product=product.filter(category=category)
 
         serializer=ProductSerializer(product,many=True)
-        print(serializer.data[1])
         return Response(serializer.data,status=status.HTTP_200_OK)
     
     if request.method=='POST':
