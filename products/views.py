@@ -44,7 +44,34 @@ def view_specific_category(request,pk):
     
     if request.method=='DELETE':
         category.delete()
-        return Response({"detail": "Category deleted successfully."},status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class ViewCategory(APIView):
+    def get(self,request,pk):
+        category=get_object_or_404(Category,pk=pk)
+        serializer=CategorySerializer(category)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    def put(self,request,pk):
+        category=get_object_or_404(Category,pk=pk)
+        serializer=CategorySerializer(category,data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+
+    def patch(self,request,pk):
+        category=get_object_or_404(Category,pk=pk)
+        serializer=CategorySerializer(category,data=request.data,partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+
+    def delete(self,request,pk):
+        category=get_object_or_404(Category,pk=pk)
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # @api_view(['GET','POST'])
