@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import Product,Category
 from .serializers import ProductSerializer,CategorySerializer
 from rest_framework import status
+from rest_framework.views import APIView
 
 
 @api_view(['GET','POST'])
@@ -70,28 +71,54 @@ def api_products(request):
         return Response(serializer.data,status=status.HTTP_201_CREATED)
         
 
-@api_view(['GET','PUT','DELETE','PATCH'])
-def view_specific_product(request,pk):
+# @api_view(['GET','PUT','DELETE','PATCH'])
+# def view_specific_product(request,pk):
 
-    product=get_object_or_404(Product,pk=pk)
+#     product=get_object_or_404(Product,pk=pk)
     
-    if request.method=='GET':
-        # product_dict={'id':product.id,'name':product.name,'price':product.price,'category':{'id':product.category.id,'name':product.category.name}}
+#     if request.method=='GET':
+#         # product_dict={'id':product.id,'name':product.name,'price':product.price,'category':{'id':product.category.id,'name':product.category.name}}
+#         serializer=ProductSerializer(product)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
+    
+#     if request.method=='PUT':
+#         serializer=ProductSerializer(product,data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_200_OK)
+    
+#     if request.method=='PATCH':
+#         serializer=ProductSerializer(product,data=request.data,partial=True)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_200_OK)
+    
+#     if request.method=='DELETE':
+#         product.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ViewProduct(APIView):
+
+    def get(self,request,pk):
+        product=get_object_or_404(Product,pk=pk)
         serializer=ProductSerializer(product)
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='PUT':
+    def put(self,request,pk):
+        product=get_object_or_404(Product,pk=pk)
         serializer=ProductSerializer(product,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='PATCH':
+    def patch(self,request,pk):
+        product=get_object_or_404(Product,pk=pk)
         serializer=ProductSerializer(product,data=request.data,partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='DELETE':
+    def delete(self,request,pk):
+        product=get_object_or_404(Product,pk=pk)
         product.delete()
-        return Response({"detail": "Product deleted successfully."},status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
