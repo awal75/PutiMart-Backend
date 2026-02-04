@@ -46,12 +46,37 @@ def view_specific_category(request,pk):
         category.delete()
         return Response({"detail": "Category deleted successfully."},status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET','POST'])
-def api_products(request):
-    if request.method=='GET':
-        search=request.GET.get('search')
-        category=request.GET.get('category')
-        print(request.query_params)
+
+# @api_view(['GET','POST'])
+# def api_products(request):
+#     if request.method=='GET':
+#         search=request.GET.get('search')
+#         category=request.GET.get('category')
+#         print(request.query_params)
+
+#         product=Product.objects.all()
+
+#         if search:
+#             product=product.filter(name__icontains=search) # name diye filter krte hbe
+#         if category:
+#             product=product.filter(category=category)
+
+#         serializer=ProductSerializer(product,many=True)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
+    
+#     if request.method=='POST':
+#         serializer=ProductSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         print(serializer)
+#         return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+class ViewProducts(APIView):
+
+    def get(self,request):
+        search=request.query_params.get('search')
+        category=request.query_params.get('category')
+    
 
         product=Product.objects.all()
 
@@ -63,12 +88,13 @@ def api_products(request):
         serializer=ProductSerializer(product,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='POST':
+    def post(self,request):
         serializer=ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         print(serializer)
         return Response(serializer.data,status=status.HTTP_201_CREATED)
+    
         
 
 # @api_view(['GET','PUT','DELETE','PATCH'])
