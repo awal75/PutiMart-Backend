@@ -9,31 +9,33 @@ from django.db.models import Count
 from rest_framework.generics import ListCreateAPIView
 
 
-@api_view(['GET','POST'])
-def api_categories(request):
-    if request.method=='GET':
-        categories=Category.objects.select_related('products').annotate(product_count=Count('products')).all()
+# @api_view(['GET','POST'])
+# def api_categories(request):
+#     if request.method=='GET':
+#         categories=Category.objects.select_related('products').annotate(product_count=Count('products')).all()
         
-        serializer=CategorySerializer(categories,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#         serializer=CategorySerializer(categories,many=True)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='POST':
-        serializer=CategorySerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
- #use api_view   
-class ViewCategories(APIView):
-    def get(self,request):
-        categories=Category.objects.annotate(product_count=Count('products'))
-        serializer=CategorySerializer(categories,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#     if request.method=='POST':
+#         serializer=CategorySerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_201_CREATED)
+#  #use api_view   
+# class ViewCategories(APIView):
+#     def get(self,request):
+#         categories=Category.objects.annotate(product_count=Count('products'))
+#         serializer=CategorySerializer(categories,many=True)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    def post(self,request):
-        serializer=CategorySerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
+#     def post(self,request):
+#         serializer=CategorySerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+
 class CategoriesListCreateAPIView(ListCreateAPIView):
     queryset=Category.objects.annotate(product_count=Count('products'))
     serializer_class=CategorySerializer
@@ -139,6 +141,22 @@ class ViewProducts(APIView):
         serializer.save()
         print(serializer)
         return Response(serializer.data,status=status.HTTP_201_CREATED)
+    
+class ProductsListCeateApiView(ListCreateAPIView):
+    serializer_class=ProductSerializer
+
+    def get_queryset(self):
+        search=self.request.query_params.get('search')
+        category=self.request.query_params.get('category')
+    
+
+        product=Product.objects.all()
+
+        if search:
+            product=product.filter(name__icontains=search) # name diye filter krte hbe
+        if category:
+            product=product.filter(category=category)
+        return product
     
         
 
