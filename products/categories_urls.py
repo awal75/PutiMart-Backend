@@ -3,7 +3,8 @@ from . import views
 
 urlpatterns=[
     # path('',views.api_categories ,name='api-categories'),
-    path('',views.ViewCategories.as_view() ,name='api-categories'),
+    # path('',views.ViewCategories.as_view() ,name='api-categories'),
+    path('',views.CategoriesListCreateAPIView.as_view() ),
     # path('/<int:pk>',views.view_specific_category,name='view-specfic-category')
     path('/<int:pk>',views.ViewCategory.as_view())
 ]

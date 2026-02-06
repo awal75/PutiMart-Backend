@@ -5,9 +5,10 @@ from decimal import Decimal
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    product_count=serializers.IntegerField(read_only=True)
     class Meta:
         model=Category
-        fields=['id','name','description']
+        fields=['id','name','description','product_count']
 
 
 class ProductSerializer(serializers.ModelSerializer):

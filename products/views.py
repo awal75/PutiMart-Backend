@@ -5,12 +5,15 @@ from .models import Product,Category
 from .serializers import ProductSerializer,CategorySerializer
 from rest_framework import status
 from rest_framework.views import APIView
+from django.db.models import Count
+from rest_framework.generics import ListCreateAPIView
 
 
 @api_view(['GET','POST'])
 def api_categories(request):
     if request.method=='GET':
-        categories=Category.objects.all()
+        categories=Category.objects.select_related('products').annotate(product_count=Count('products')).all()
+        
         serializer=CategorySerializer(categories,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
@@ -19,10 +22,10 @@ def api_categories(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
-    
+ #use api_view   
 class ViewCategories(APIView):
     def get(self,request):
-        categories=Category.objects.all()
+        categories=Category.objects.annotate(product_count=Count('products'))
         serializer=CategorySerializer(categories,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
@@ -31,6 +34,9 @@ class ViewCategories(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
+class CategoriesListCreateAPIView(ListCreateAPIView):
+    queryset=Category.objects.annotate(product_count=Count('products'))
+    serializer_class=CategorySerializer
 
 
 @api_view(['GET','PUT','DELETE','PATCH'])
