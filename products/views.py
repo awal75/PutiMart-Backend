@@ -6,7 +6,7 @@ from .serializers import ProductSerializer,CategorySerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from django.db.models import Count
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 
 
 # @api_view(['GET','POST'])
@@ -93,6 +93,10 @@ class ViewCategory(APIView):
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class CategoryRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class=CategorySerializer
+    queryset=Category.objects.all()
+    
 
 # @api_view(['GET','POST'])
 # def api_products(request):
@@ -118,29 +122,29 @@ class ViewCategory(APIView):
 #         print(serializer)
 #         return Response(serializer.data,status=status.HTTP_201_CREATED)
 
-class ViewProducts(APIView):
+# class ViewProducts(APIView):
 
-    def get(self,request):
-        search=request.query_params.get('search')
-        category=request.query_params.get('category')
+#     def get(self,request):
+#         search=request.query_params.get('search')
+#         category=request.query_params.get('category')
     
 
-        product=Product.objects.all()
+#         product=Product.objects.all()
 
-        if search:
-            product=product.filter(name__icontains=search) # name diye filter krte hbe
-        if category:
-            product=product.filter(category=category)
+#         if search:
+#             product=product.filter(name__icontains=search) # name diye filter krte hbe
+#         if category:
+#             product=product.filter(category=category)
 
-        serializer=ProductSerializer(product,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#         serializer=ProductSerializer(product,many=True)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    def post(self,request):
-        serializer=ProductSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        print(serializer)
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
+#     def post(self,request):
+#         serializer=ProductSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         print(serializer)
+#         return Response(serializer.data,status=status.HTTP_201_CREATED)
     
 class ProductsListCeateApiView(ListCreateAPIView):
     serializer_class=ProductSerializer
@@ -186,28 +190,32 @@ class ProductsListCeateApiView(ListCreateAPIView):
 #         product.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class ViewProduct(APIView):
+# class ViewProduct(APIView):
 
-    def get(self,request,pk):
-        product=get_object_or_404(Product,pk=pk)
-        serializer=ProductSerializer(product)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#     def get(self,request,pk):
+#         product=get_object_or_404(Product,pk=pk)
+#         serializer=ProductSerializer(product)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    def put(self,request,pk):
-        product=get_object_or_404(Product,pk=pk)
-        serializer=ProductSerializer(product,data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#     def put(self,request,pk):
+#         product=get_object_or_404(Product,pk=pk)
+#         serializer=ProductSerializer(product,data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    def patch(self,request,pk):
-        product=get_object_or_404(Product,pk=pk)
-        serializer=ProductSerializer(product,data=request.data,partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#     def patch(self,request,pk):
+#         product=get_object_or_404(Product,pk=pk)
+#         serializer=ProductSerializer(product,data=request.data,partial=True)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    def delete(self,request,pk):
-        product=get_object_or_404(Product,pk=pk)
-        product.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     def delete(self,request,pk):
+#         product=get_object_or_404(Product,pk=pk)
+#         product.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class productRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    queryset=Product.objects.all()
+    serializer_class=ProductSerializer
