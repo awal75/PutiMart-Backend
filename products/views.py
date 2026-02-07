@@ -15,9 +15,15 @@ class CategoryModelViewSet(ModelViewSet):
 
 
 class ProductsModelViewSet(ModelViewSet):
-    queryset=Product.objects.all()
     serializer_class=ProductSerializer
-    
+
+    def get_queryset(self):
+        products=Product.objects.all()
+        category_id=self.kwargs.get('category_pk')
+        if category_id:
+            products=products.filter(category=category_id)
+        return products
+
 
 
 # @api_view(['GET','POST'])
