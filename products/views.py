@@ -7,6 +7,17 @@ from rest_framework import status
 from rest_framework.views import APIView
 from django.db.models import Count
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
+
+class CategoryModelViewSet(ModelViewSet):
+    queryset=Category.objects.all()
+    serializer_class=CategorySerializer
+
+
+class ProductsModelViewSet(ModelViewSet):
+    queryset=Product.objects.all()
+    serializer_class=ProductSerializer
+    
 
 
 # @api_view(['GET','POST'])
@@ -36,66 +47,66 @@ from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIVi
 #         return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 
-class CategoriesListCreateAPIView(ListCreateAPIView):
-    queryset=Category.objects.annotate(product_count=Count('products'))
-    serializer_class=CategorySerializer
+# class CategoriesListCreateAPIView(ListCreateAPIView):
+#     queryset=Category.objects.annotate(product_count=Count('products'))
+#     serializer_class=CategorySerializer
 
 
-@api_view(['GET','PUT','DELETE','PATCH'])
-def view_specific_category(request,pk):
-    category=get_object_or_404(Category,pk=pk)
+# @api_view(['GET','PUT','DELETE','PATCH'])
+# def view_specific_category(request,pk):
+#     category=get_object_or_404(Category,pk=pk)
 
-    if request.method=='GET':
-        # category_dic={'id':category.id,'name':category.name,'description':category.description}
-        serializer=CategorySerializer(category)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#     if request.method=='GET':
+#         # category_dic={'id':category.id,'name':category.name,'description':category.description}
+#         serializer=CategorySerializer(category)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='PUT':
-        serializer=CategorySerializer(category,data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#     if request.method=='PUT':
+#         serializer=CategorySerializer(category,data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='PATCH':
-        serializer=CategorySerializer(category,data=request.data,partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#     if request.method=='PATCH':
+#         serializer=CategorySerializer(category,data=request.data,partial=True)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='DELETE':
-        category.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     if request.method=='DELETE':
+#         category.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
     
-class ViewCategory(APIView):
-    def get(self,request,pk):
-        category=get_object_or_404(Category,pk=pk)
-        serializer=CategorySerializer(category)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+# class ViewCategory(APIView):
+#     def get(self,request,pk):
+#         category=get_object_or_404(Category,pk=pk)
+#         serializer=CategorySerializer(category)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    def put(self,request,pk):
-        category=get_object_or_404(Category,pk=pk)
-        serializer=CategorySerializer(category,data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_200_OK)
-    
-
-    def patch(self,request,pk):
-        category=get_object_or_404(Category,pk=pk)
-        serializer=CategorySerializer(category,data=request.data,partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#     def put(self,request,pk):
+#         category=get_object_or_404(Category,pk=pk)
+#         serializer=CategorySerializer(category,data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
 
-    def delete(self,request,pk):
-        category=get_object_or_404(Category,pk=pk)
-        category.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     def patch(self,request,pk):
+#         category=get_object_or_404(Category,pk=pk)
+#         serializer=CategorySerializer(category,data=request.data,partial=True)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_200_OK)
+    
 
-class CategoryRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    serializer_class=CategorySerializer
-    queryset=Category.objects.all()
+#     def delete(self,request,pk):
+#         category=get_object_or_404(Category,pk=pk)
+#         category.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# class CategoryRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+#     serializer_class=CategorySerializer
+#     queryset=Category.objects.all()
     
 
 # @api_view(['GET','POST'])
@@ -146,21 +157,21 @@ class CategoryRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 #         print(serializer)
 #         return Response(serializer.data,status=status.HTTP_201_CREATED)
     
-class ProductsListCeateApiView(ListCreateAPIView):
-    serializer_class=ProductSerializer
+# class ProductsListCeateApiView(ListCreateAPIView):
+#     serializer_class=ProductSerializer
 
-    def get_queryset(self):
-        search=self.request.query_params.get('search')
-        category=self.request.query_params.get('category')
+#     def get_queryset(self):
+#         search=self.request.query_params.get('search')
+#         category=self.request.query_params.get('category')
     
 
-        product=Product.objects.all()
+#         product=Product.objects.all()
 
-        if search:
-            product=product.filter(name__icontains=search) # name diye filter krte hbe
-        if category:
-            product=product.filter(category=category)
-        return product
+#         if search:
+#             product=product.filter(name__icontains=search) # name diye filter krte hbe
+#         if category:
+#             product=product.filter(category=category)
+#         return product
     
         
 
@@ -216,6 +227,6 @@ class ProductsListCeateApiView(ListCreateAPIView):
 #         product.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
     
-class productRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    queryset=Product.objects.all()
-    serializer_class=ProductSerializer
+# class productRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+#     queryset=Product.objects.all()
+#     serializer_class=ProductSerializer
