@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import CartSerializer,CartItemSerializer
 from .models import Cart,CartItem
+from rest_framework.viewsets import ModelViewSet
 
 
 
@@ -19,6 +20,22 @@ def view_cart(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
+    
+class CartModelViewSet(ModelViewSet):
+    serializer_class=CartSerializer
+
+    queryset=Cart.objects.all()
+
+class CartItemModelView(ModelViewSet):
+    serializer_class=CartItemSerializer
+
+    def get_queryset(self):
+        cartItems=CartItem.objects.all()
+        cart_id=self.kwargs.get('cart_id')
+        if cart_id:
+            cartItems=cartItems.filter(cart=cart_id)
+        return cartItems
+
     
 
 @api_view(['GET','DELETE'])
