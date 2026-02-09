@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from django.db.models import Count
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 
 class CategoryModelViewSet(ModelViewSet):
     queryset=Category.objects.all()
@@ -17,13 +18,10 @@ class CategoryModelViewSet(ModelViewSet):
 
 class ProductsModelViewSet(ModelViewSet):
     serializer_class=ProductSerializer
-
-    def get_queryset(self):
-        products=Product.objects.all()
-        category_id=self.kwargs.get('category_pk')
-        if category_id:
-            products=products.filter(category=category_id)
-        return products
+    queryset=Product.objects.all()
+    filter_backends=[DjangoFilterBackend]
+    filterset_fields=['category_pk']
+    
 
 class ReviewModelViewSet(ModelViewSet):
     serializer_class=ReviewSerializer

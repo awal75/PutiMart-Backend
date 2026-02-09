@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'products',
     'cart',
     'orders',
+    'django_filters',
 ]
 
 # for custom user model 
