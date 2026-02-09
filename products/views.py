@@ -1,8 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Product,Category
-from .serializers import ProductSerializer,CategorySerializer
+from .models import Product,Category,Review
+from .serializers import ProductSerializer,CategorySerializer,ReviewSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from django.db.models import Count
@@ -14,6 +14,7 @@ class CategoryModelViewSet(ModelViewSet):
     serializer_class=CategorySerializer
 
 
+
 class ProductsModelViewSet(ModelViewSet):
     serializer_class=ProductSerializer
 
@@ -23,6 +24,19 @@ class ProductsModelViewSet(ModelViewSet):
         if category_id:
             products=products.filter(category=category_id)
         return products
+
+class ReviewModelViewSet(ModelViewSet):
+    serializer_class=ReviewSerializer
+    
+    def get_queryset(self):
+        reviews=Review.objects.all()
+        product_pk=self.kwargs.get('product_pk')
+
+        if product_pk:
+           reviews= reviews.filter(product=product_pk)
+
+        return reviews
+
 
 
 

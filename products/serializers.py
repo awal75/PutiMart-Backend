@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.response import Response
-from .models import Product,Category
+from .models import Product,Category,Review
 from decimal import Decimal
 
 
@@ -33,5 +33,12 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_price_with_tax(self,product):
         return round(product.price*Decimal('1.10'),2)
+    
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Review
+        fields=['id','product','user','description','rating','created_at']
+
 
     
