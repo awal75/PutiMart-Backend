@@ -11,7 +11,7 @@ class Cart(models.Model):
     created_at=models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user
+        return f"Cart of {self.user.first_name}"
 
 
 

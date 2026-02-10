@@ -4,4 +4,8 @@ from .models import Cart,CartItem
 
 
 # admin.site.register(Cart)
-admin.site.register([Cart,CartItem])
+@admin.register(Cart)
+class CardAdmin(admin.ModelAdmin):
+    list_display=['id','user']
+
+admin.site.register(CartItem)

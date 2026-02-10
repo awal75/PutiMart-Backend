@@ -3,10 +3,6 @@ from .models import Cart,CartItem
 
 
 
-class CartSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Cart
-        fields=['id','user','created_at']
 
 
 
@@ -17,3 +13,11 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields=['id','cart','product','quantity']
 
 
+class CartSerializer(serializers.ModelSerializer):
+    cartitems=CartItemSerializer(many=True)
+
+    class Meta:
+        model=Cart
+        fields=['id','user','created_at','cartitems']
+
+    

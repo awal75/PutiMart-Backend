@@ -4,26 +4,26 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import CartSerializer,CartItemSerializer
 from .models import Cart,CartItem
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet,ModelViewSet
+from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin
 
 
 
-@api_view(['POST'])
-def view_cart(request):
-    # if request.method=='GET':
-    #     carts=Cart.objects.all()
-    #     serializer=CartSerializer(carts)
-    #     return Response(serializer.data,status=status.HTTP_200_OK)
+# @api_view(['POST'])
+# def view_cart(request):
+#     # if request.method=='GET':
+#     #     carts=Cart.objects.all()
+#     #     serializer=CartSerializer(carts)
+#     #     return Response(serializer.data,status=status.HTTP_200_OK)
 
-    if request.method=='POST':
-        serializer=CartSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
+#     if request.method=='POST':
+#         serializer=CartSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_201_CREATED)
     
-class CartModelViewSet(ModelViewSet):
+class CartModelViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
     serializer_class=CartSerializer
-
     queryset=Cart.objects.all()
 
 class CartItemModelView(ModelViewSet):
