@@ -12,15 +12,15 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    # category=serializers.PrimaryKeyRelatedField(
-    #     queryset=Category.objects.all(),
-    #     write_only=True
-    #     )
+    category=serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+        write_only=True
+        )
     # category=CategorySerializer(read_only=True)
     # category=serializers.HyperlinkedRelatedField(
     #     view_name='view-specfic-category',
     #     queryset=Category.objects.all()
-  
+
     #  )
     price_tax=serializers.SerializerMethodField(
         method_name='get_price_with_tax',

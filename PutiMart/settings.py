@@ -87,6 +87,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'PutiMart.wsgi.application'
 
 
+# REST_FRAMEWORK = {
+#     'COERCE_DECIMAL_TO_STRING':False,
+#     'PAGE_SIZE': 10
+# }
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases

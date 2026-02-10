@@ -10,6 +10,8 @@ from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIVi
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ProductFilter
+from rest_framework.filters import SearchFilter,OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 
 class CategoryModelViewSet(ModelViewSet):
     queryset=Category.objects.all()
@@ -19,9 +21,12 @@ class CategoryModelViewSet(ModelViewSet):
 
 class ProductsModelViewSet(ModelViewSet):
     serializer_class=ProductSerializer
-    queryset=Product.objects.select_related('category').all()
-    filter_backends=[DjangoFilterBackend]
+    queryset=Product.objects.all()
+    filter_backends=[DjangoFilterBackend,SearchFilter,OrderingFilter]
     filterset_class=ProductFilter
+    search_fields=['name','description','category__name']
+    ordering_fields=['price','updated_at']
+    pagination_class=PageNumberPagination
     
 
 class ReviewModelViewSet(ModelViewSet):
