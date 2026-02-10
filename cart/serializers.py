@@ -3,9 +3,6 @@ from .models import Cart,CartItem
 from products.models import Product
 
 
-
-
-
 class SimpleProductSerializer(serializers.ModelSerializer):
     class Meta:
         model=Product

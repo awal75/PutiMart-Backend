@@ -31,63 +31,63 @@ class CartItemModelView(ModelViewSet):
 
     def get_queryset(self):
         cartItems=CartItem.objects.all()
-        cart_id=self.kwargs.get('cart_id')
+        cart_id=self.kwargs.get('cart_pk')
         if cart_id:
             cartItems=cartItems.filter(cart=cart_id)
         return cartItems
 
     
 
-@api_view(['GET','DELETE'])
-def view_specific_cart(request,pk):
+# @api_view(['GET','DELETE'])
+# def view_specific_cart(request,pk):
 
-    cart=get_object_or_404(Cart,pk=pk)
+#     cart=get_object_or_404(Cart,pk=pk)
 
-    if request.method=='GET':
-        serializer=CartSerializer(cart)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#     if request.method=='GET':
+#         serializer=CartSerializer(cart)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='DELETE':
-        cart.delete()
-        return Response({"message": "cart deleted successfully."},status=status.HTTP_204_NO_CONTENT)
+#     if request.method=='DELETE':
+#         cart.delete()
+#         return Response({"message": "cart deleted successfully."},status=status.HTTP_204_NO_CONTENT)
     
 
-@api_view(['GET','POST'])
-def view_items(request,cart_id):
-    if request.method== 'GET':
-        cart_items=CartItem.objects.filter(cart=cart_id)
-        serializer=CartItemSerializer(cart_items,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+# @api_view(['GET','POST'])
+# def view_items(request,cart_id):
+#     if request.method== 'GET':
+#         cart_items=CartItem.objects.filter(cart=cart_id)
+#         serializer=CartItemSerializer(cart_items,many=True)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='POST':
-        serializer=CartItemSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
+#     if request.method=='POST':
+#         serializer=CartItemSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data,status=status.HTTP_201_CREATED)
 
        
    
 
-@api_view(['GET','PATCH','DELETE'])
-def view_specific_items(request,cart_id,item_id):
+# @api_view(['GET','PATCH','DELETE'])
+# def view_specific_items(request,cart_id,item_id):
 
-    item=get_object_or_404(CartItem,pk=item_id)
+#     item=get_object_or_404(CartItem,pk=item_id)
     
-    if request.method=='GET':
-        serializer=CartItemSerializer(item)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#     if request.method=='GET':
+#         serializer=CartItemSerializer(item)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
 
-    if request.method=='PATCH':
+#     if request.method=='PATCH':
         
-        serializer=CartItemSerializer(item,data=request.data,partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+#         serializer=CartItemSerializer(item,data=request.data,partial=True)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
 
-        return Response(serializer.data,status=status.HTTP_200_OK)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    if request.method=='DELETE':
-        item.delete()
-        return Response({'message':'cartItem deleted successfully.'},status=status.HTTP_204_NO_CONTENT)
+#     if request.method=='DELETE':
+#         item.delete()
+#         return Response({'message':'cartItem deleted successfully.'},status=status.HTTP_204_NO_CONTENT)
 
    
 
