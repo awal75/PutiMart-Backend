@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import CartSerializer,CartItemSerializer
+from .serializers import CartSerializer,CartItemSerializer,AddCartItemSerializer
 from .models import Cart,CartItem
 from rest_framework.viewsets import GenericViewSet,ModelViewSet
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin
@@ -27,14 +27,18 @@ class CartModelViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
     queryset=Cart.objects.all()
 
 class CartItemModelView(ModelViewSet):
-    serializer_class=CartItemSerializer
+    def get_serializer_class(self):
+
+        if self.request.method == 'POST':
+            return AddCartItemSerializer
+        return CartItemSerializer
+    
+    def get_serializer_context(self):
+        return {'cart_pk':self.kwargs.get('cart_pk')}
+    
 
     def get_queryset(self):
-        cartItems=CartItem.objects.all()
-        cart_id=self.kwargs.get('cart_pk')
-        if cart_id:
-            cartItems=cartItems.filter(cart=cart_id)
-        return cartItems
+        return CartItem.objects.filter(cart=self.kwargs['cart_pk'])    
 
     
 
