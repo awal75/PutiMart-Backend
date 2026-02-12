@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import CartSerializer,CartItemSerializer,AddCartItemSerializer
+from .serializers import CartSerializer,CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer
 from .models import Cart,CartItem
 from rest_framework.viewsets import GenericViewSet,ModelViewSet
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin
@@ -31,6 +31,8 @@ class CartItemModelView(ModelViewSet):
 
         if self.request.method == 'POST':
             return AddCartItemSerializer
+        elif self.request.method == 'PATCH':
+            return UpdateCartItemSerializer
         return CartItemSerializer
     
     def get_serializer_context(self):
