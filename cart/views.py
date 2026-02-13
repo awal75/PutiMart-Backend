@@ -27,6 +27,7 @@ class CartModelViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
     queryset=Cart.objects.all()
 
 class CartItemModelView(ModelViewSet):
+    http_method_names=['get','post','patch','delete']
     def get_serializer_class(self):
 
         if self.request.method == 'POST':
