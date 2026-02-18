@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'djoser',
     "debug_toolbar",
     'api',
     'authentications',
@@ -87,10 +88,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'PutiMart.wsgi.application'
 
 
-# REST_FRAMEWORK = {
-#     'COERCE_DECIMAL_TO_STRING':False,
-#     'PAGE_SIZE': 10
-# }
+REST_FRAMEWORK = {
+    'COERCE_DECIMAL_TO_STRING':False,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+}
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
