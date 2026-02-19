@@ -12,6 +12,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ProductFilter
 from rest_framework.filters import SearchFilter,OrderingFilter
 from .paginations import DefaultPagination
+# from rest_framework import permissions
+from api import permissions
 
 class CategoryModelViewSet(ModelViewSet):
     queryset=Category.objects.all()
@@ -27,10 +29,12 @@ class ProductsModelViewSet(ModelViewSet):
     search_fields=['name','description','category__name']
     ordering_fields=['price','updated_at']
     pagination_class=DefaultPagination
+    permission_classes=(permissions.IsAdminOrReadOnly,)
     
 
 class ReviewModelViewSet(ModelViewSet):
     serializer_class=ReviewSerializer
+    permission_classes=(permissions.IsAdminOrReadOnly,)
     
     def get_queryset(self):
         reviews=Review.objects.all()
