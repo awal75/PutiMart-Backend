@@ -98,6 +98,11 @@ SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
 }
 
+DJOSER={
+    'SERIALIZERS': {
+        'user_create': 'authentications.serializers.UserCreateSerializer',
+        }
+}
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
