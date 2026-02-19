@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'djoser',
     "debug_toolbar",
     'api',
@@ -92,7 +93,7 @@ WSGI_APPLICATION = 'PutiMart.wsgi.application'
 REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING':False,
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 SIMPLE_JWT = {
@@ -103,6 +104,7 @@ SIMPLE_JWT = {
 DJOSER={
     'SERIALIZERS': {
         'user_create': 'authentications.serializers.UserCreateSerializer',
+        'current_user': 'authentications.serializers.UserSerializer',
         }
 }
 # Database
