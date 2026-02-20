@@ -26,9 +26,26 @@ from rest_framework.permissions import IsAuthenticated
 class CartModelViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
     serializer_class=CartSerializer
     permission_classes=[IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        return {'user':self.request.user }
     
     def get_queryset(self):
         return Cart.objects.filter(user=self.request.user)
+    
+    def create(self, request, *args, **kwargs):
+        cart, created = Cart.objects.get_or_create(
+            user=request.user
+        )
+
+        serializer = self.get_serializer(cart)
+
+        if created:
+            return Response(serializer.data, status=201)
+        return Response(serializer.data, status=200)
 
 class CartItemModelView(ModelViewSet):
     http_method_names=['get','post','patch','delete']

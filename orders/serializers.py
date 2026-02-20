@@ -9,6 +9,8 @@ class SimpleItem(serializers.ModelSerializer):
         model=OrderItem
         fields=['id','price','quantity','total_price','product']
 
+class CreateOrderSerializer(serializers.Serializer):
+    cart_id=serializers.UUIDField()
 
 class OrderSerializer(serializers.ModelSerializer):
     orderitems=SimpleItem(many=True,read_only=True)
@@ -16,5 +18,5 @@ class OrderSerializer(serializers.ModelSerializer):
         model=Order
         fields=['id','user','status','total_price','created_at','updated_at','orderitems']
         read_only_fields=['id','user']
-    
+
     

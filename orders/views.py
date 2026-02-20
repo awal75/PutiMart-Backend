@@ -4,8 +4,11 @@ from .serializers import OrderSerializer,SimpleItem
 from rest_framework import permissions
 
 class OrderModelViewSet(ModelViewSet):
-    serializer_class=OrderSerializer
     permission_classes=[permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+    #    if self.request.method=='POST'
+       return OrderSerializer
 
     def get_queryset(self):
      if self.request.user.is_staff:
