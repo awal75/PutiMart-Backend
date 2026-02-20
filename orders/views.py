@@ -1,13 +1,14 @@
 from rest_framework.viewsets import ModelViewSet
 from .models import Order,OrderItem
-from .serializers import OrderSerializer,SimpleItem
+from .serializers import OrderSerializer,SimpleItem,CreateOrderSerializer
 from rest_framework import permissions
 
 class OrderModelViewSet(ModelViewSet):
     permission_classes=[permissions.IsAuthenticated]
 
     def get_serializer_class(self):
-    #    if self.request.method=='POST'
+       if self.request.method=='POST':
+          return CreateOrderSerializer
        return OrderSerializer
 
     def get_queryset(self):
