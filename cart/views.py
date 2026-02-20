@@ -6,6 +6,7 @@ from .serializers import CartSerializer,CartItemSerializer,AddCartItemSerializer
 from .models import Cart,CartItem
 from rest_framework.viewsets import GenericViewSet,ModelViewSet
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -24,10 +25,14 @@ from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin
     
 class CartModelViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
     serializer_class=CartSerializer
-    queryset=Cart.objects.all()
+    permission_classes=[IsAuthenticated]
+    
+    def get_queryset(self):
+        return Cart.objects.filter(user=self.request.user)
 
 class CartItemModelView(ModelViewSet):
     http_method_names=['get','post','patch','delete']
+    permission_classes=[IsAuthenticated]
     def get_serializer_class(self):
 
         if self.request.method == 'POST':
@@ -39,7 +44,6 @@ class CartItemModelView(ModelViewSet):
     def get_serializer_context(self):
         return {'cart_pk':self.kwargs.get('cart_pk')}
     
-
     def get_queryset(self):
         return CartItem.objects.filter(cart=self.kwargs['cart_pk'])    
 
