@@ -3,12 +3,14 @@ from rest_framework.routers import SimpleRouter,DefaultRouter
 from rest_framework_nested.routers import NestedDefaultRouter
 from products import views
 from cart.views import CartModelViewSet,CartItemModelView
+from orders.views import OrderModelViewSet,OrderItemModelViewSet
 
 router=DefaultRouter()
 router.register(r'products',views.ProductsModelViewSet,basename='products')
 router.register(r'categories',views.CategoryModelViewSet,basename='categories')
 router.register(r'reviews',views.ReviewModelViewSet,basename='reviews')
 router.register(r'carts',CartModelViewSet,basename='carts')
+router.register(r'orders',OrderModelViewSet,basename='orders')
 
 categories_router=NestedDefaultRouter(router,r'categories',lookup='category')
 categories_router.register(r'products',views.ProductsModelViewSet,basename='category-products')
@@ -18,6 +20,8 @@ preoducts_review_router.register(r'reviews',views.ReviewModelViewSet,basename='p
 carts_router=NestedDefaultRouter(router,r'carts',lookup='cart')
 carts_router.register(r'items',CartItemModelView,basename='cart-items')
 
+order_router=NestedDefaultRouter(router,r'orders',lookup='order')
+order_router.register(r'order-items',OrderItemModelViewSet,basename='order-items')
 
 urlpatterns = [
     # # path('products',include('products.products_urls')),
@@ -28,6 +32,7 @@ urlpatterns = [
     path('',include(router.urls)),
     path('',include(categories_router.urls)),
     path('',include(preoducts_review_router.urls)),
-    path('',include(carts_router.urls))
+    path('',include(carts_router.urls)),
+    path('',include(order_router.urls))
 
 ]
