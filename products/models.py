@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator,MinValueValidator
 
 User=get_user_model()
 
@@ -32,7 +33,7 @@ class Review(models.Model):
     product=models.ForeignKey(Product,on_delete=models.CASCADE,related_name='reviews')
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='reviews')
     description=models.TextField()
-    rating=models.PositiveSmallIntegerField(default=0)
+    rating=models.PositiveSmallIntegerField(validators=[MaxValueValidator(5),MinValueValidator(1)])
     created_at=models.DateTimeField(auto_now_add=True)
 
     class Meta:

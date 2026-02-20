@@ -18,7 +18,7 @@ from api import permissions
 class CategoryModelViewSet(ModelViewSet):
     queryset=Category.objects.all()
     serializer_class=CategorySerializer
-
+    permission_classes=(permissions.IsAdminOrReadOnly,)
 
 
 class ProductsModelViewSet(ModelViewSet):
@@ -34,7 +34,6 @@ class ProductsModelViewSet(ModelViewSet):
 
 class ReviewModelViewSet(ModelViewSet):
     serializer_class=ReviewSerializer
-    permission_classes=(permissions.IsAdminOrReadOnly,)
     
     def get_queryset(self):
         reviews=Review.objects.all()
@@ -42,8 +41,18 @@ class ReviewModelViewSet(ModelViewSet):
 
         if product_pk:
            reviews= reviews.filter(product=product_pk)
-
+           
         return reviews
+    
+    def get_serializer_context(self):
+        return {
+            'product_pk':self.kwargs['product_pk'],
+            'request':self.request
+                
+                }
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 

@@ -2,6 +2,8 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from .models import Product,Category,Review
 from decimal import Decimal
+from django.contrib.auth import get_user_model
+User=get_user_model()
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -33,12 +35,39 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_price_with_tax(self,product):
         return round(product.price*Decimal('1.10'),2)
-    
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    name=serializers.SerializerMethodField(
+        method_name='get_User_full_name')
+    class Meta:
+        model= User
+        fields=['id','name']
+
+    def get_User_full_name(self,user):
+        return user.get_full_name()
 
 class ReviewSerializer(serializers.ModelSerializer):
+    user=SimpleUserSerializer()
     class Meta:
         model=Review
         fields=['id','product','user','description','rating','created_at']
+        read_only_fields=['product','user']
+
+    def create(self, validated_data):
+        product_pk=self.context['product_pk']
+        print(product_pk)
+        return Review.objects.create(product_id=product_pk,**validated_data)
+    
+
+    def validate(self, attrs):
+        product_id = self.context['product_pk']
+        user = self.context['request'].user
+
+        if Review.objects.filter(product_id=product_id, user=user).exists():
+            raise serializers.ValidationError(
+                "You have already reviewed this product."
+            )
+        return attrs
 
 
     
