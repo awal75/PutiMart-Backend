@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Order,OrderItem
 from cart.serializers import SimpleProductSerializer
 from cart.models import Cart,CartItem
+from django.db import transaction
+from django.db.models import F, Sum
 
 
 class SimpleItem(serializers.ModelSerializer):
@@ -19,6 +21,15 @@ class CreateOrderSerializer(serializers.Serializer):
         
         if not CartItem.objects.filter(cart=cart_id).exists():
             raise serializers.ValidationError('This cart have no items')
+        return cart_id
+    
+    def create(self, validated_data):
+        cart=Cart.objects.get(validated_data['cart_id'])
+        user_id=self.context['user_id']
+
+        cart_items=cart.select_relaed('product').annoted(total_price=F('product__price')*F('quantity')).sum('total_price')
+
+        return 
     
 class OrderSerializer(serializers.ModelSerializer):
     orderitems=SimpleItem(many=True,read_only=True)
