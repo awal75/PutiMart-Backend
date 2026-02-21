@@ -8,7 +8,7 @@ class OrderModelViewSet(ModelViewSet):
     http_method_names=['get','post','patch','delete']
 
     def get_serializer_class(self):
-       if self.action=='create':
+       if self.request.method=='POST':
           return CreateOrderSerializer  
        return OrderSerializer
     

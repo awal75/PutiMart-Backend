@@ -62,6 +62,8 @@ class CreateOrderSerializer(serializers.Serializer):
         cart.cartitems.all().delete()
 
         return order 
+    def to_representation(self, instance):
+        return OrderSerializer(instance).data
     
 class OrderSerializer(serializers.ModelSerializer):
     orderitems=SimpleItem(many=True,read_only=True)
