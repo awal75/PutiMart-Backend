@@ -20,8 +20,8 @@ preoducts_review_router.register(r'reviews',views.ReviewModelViewSet,basename='p
 carts_router=NestedDefaultRouter(router,r'carts',lookup='cart')
 carts_router.register(r'items',CartItemModelView,basename='cart-items')
 
-order_router=NestedDefaultRouter(router,r'orders',lookup='order')
-order_router.register(r'order-items',OrderItemModelViewSet,basename='order-items')
+# order_router=NestedDefaultRouter(router,r'orders',lookup='order')
+# order_router.register(r'order-items',OrderItemModelViewSet,basename='order-items')
 
 urlpatterns = [
     # # path('products',include('products.products_urls')),
@@ -33,6 +33,6 @@ urlpatterns = [
     path('',include(categories_router.urls)),
     path('',include(preoducts_review_router.urls)),
     path('',include(carts_router.urls)),
-    path('',include(order_router.urls))
+    # path('',include(order_router.urls))
 
 ]

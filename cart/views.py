@@ -27,11 +27,11 @@ class CartModelViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
     serializer_class=CartSerializer
     permission_classes=[IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
 
-    def get_context_data(self, **kwargs):
-        return {'user':self.request.user }
+    # def get_context_data(self, **kwargs):
+    #     return {'user':self.request.user }
     
     def get_queryset(self):
         return Cart.objects.filter(user=self.request.user)
@@ -62,7 +62,7 @@ class CartItemModelView(ModelViewSet):
         return {'cart_pk':self.kwargs.get('cart_pk')}
     
     def get_queryset(self):
-        return CartItem.objects.filter(cart=self.kwargs['cart_pk'])    
+        return CartItem.objects.prefetch_related('product').filter(cart=self.kwargs['cart_pk'])    
 
     
 

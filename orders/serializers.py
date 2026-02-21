@@ -13,23 +13,55 @@ class SimpleItem(serializers.ModelSerializer):
         fields=['id','price','quantity','total_price','product']
 
 class CreateOrderSerializer(serializers.Serializer):
-    cart_id=serializers.UUIDField()
+    cart_id = serializers.UUIDField()
 
-    def validate_cart_id(self,cart_id):
+    def validate_cart_id(self, cart_id):
         if not Cart.objects.filter(id=cart_id).exists():
-            raise serializers.ValidationError('This cart is not exits')
-        
-        if not CartItem.objects.filter(cart=cart_id).exists():
-            raise serializers.ValidationError('This cart have no items')
+            raise serializers.ValidationError('Cart does not exist.')
+
+        if not CartItem.objects.filter(cart_id=cart_id).exists():
+            raise serializers.ValidationError('Cart is empty.')
+
         return cart_id
-    
+
+    @transaction.atomic
     def create(self, validated_data):
-        cart=Cart.objects.get(validated_data['cart_id'])
-        user_id=self.context['user_id']
+        cart_id = validated_data['cart_id']
+        user = self.context['request'].user
 
-        cart_items=cart.select_relaed('product').annoted(total_price=F('product__price')*F('quantity')).sum('total_price')
+        cart = Cart.objects.get(id=cart_id)
 
-        return 
+        # Get cart items with product in one query
+        cart_items = CartItem.objects.select_related('product').filter(cart=cart)
+
+        # Calculate total price
+        total_price = cart_items.aggregate(
+            total=Sum(F('product__price') * F('quantity'))
+        )['total']
+
+        # Create Order
+        order = Order.objects.create(
+            user=user,
+            total_price=total_price
+        )
+
+
+        order_items = [
+            OrderItem(
+                order=order,
+                product=item.product,
+                price=item.product.price,
+                quantity=item.quantity
+            )
+            for item in cart_items
+        ]
+
+        OrderItem.objects.bulk_create(order_items)
+
+   
+        cart.delete()
+
+        return order 
     
 class OrderSerializer(serializers.ModelSerializer):
     orderitems=SimpleItem(many=True,read_only=True)
