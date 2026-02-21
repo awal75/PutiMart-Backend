@@ -31,15 +31,14 @@ class CreateOrderSerializer(serializers.Serializer):
 
         cart = Cart.objects.get(id=cart_id)
 
-        # Get cart items with product in one query
+
         cart_items = CartItem.objects.select_related('product').filter(cart=cart)
 
-        # Calculate total price
         total_price = cart_items.aggregate(
             total=Sum(F('product__price') * F('quantity'))
         )['total']
-
-        # Create Order
+        print(total_price)
+     
         order = Order.objects.create(
             user=user,
             total_price=total_price
@@ -51,7 +50,8 @@ class CreateOrderSerializer(serializers.Serializer):
                 order=order,
                 product=item.product,
                 price=item.product.price,
-                quantity=item.quantity
+                quantity=item.quantity,
+                total_price=item.product.price * item.quantity,
             )
             for item in cart_items
         ]
@@ -59,7 +59,7 @@ class CreateOrderSerializer(serializers.Serializer):
         OrderItem.objects.bulk_create(order_items)
 
    
-        cart.delete()
+        cart.cartitems.all().delete()
 
         return order 
     
