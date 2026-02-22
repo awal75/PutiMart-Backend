@@ -14,7 +14,7 @@ class OrderModelViewSet(ModelViewSet):
             return UpdateOrderSerializer
          return OrderSerializer
     def get_permissions(self):
-       if self.request.method in ['POST','DELETE']:
+       if self.request.method == 'DELETE':
           return [permissions.IsAdminUser()]
        return [permissions.IsAuthenticated()]
     

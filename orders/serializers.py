@@ -28,8 +28,7 @@ class CreateOrderSerializer(serializers.Serializer):
         cart_id = validated_data['cart_id']
         user = self.context['request'].user
         try:
-         order=OrderService().create_order(user_id=user,cart_id=cart_id)
-         return order 
+            return  OrderService.create_order(user_id=user,cart_id=cart_id)  
         except ValueError as e:
             raise serializers.ValidationError(e)
         
@@ -40,6 +39,22 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model=Order
         fields=['status']
+
+    def update(self, instance, validated_data):
+        status=validated_data['status']
+        user=self.context['request'].user
+
+        if status=='canceled':
+            return OrderService.cancel_order(order=instance,user=user)
+        
+        if not user.is_staff:
+            raise serializers.ValidationError({'detail':'You can only canceled status'})
+        
+        # instance.status=status
+        # instance.save()
+        # return instance
+
+        return super().update(instance, validated_data)
     
 class OrderSerializer(serializers.ModelSerializer):
     orderitems=SimpleItem(many=True,read_only=True)

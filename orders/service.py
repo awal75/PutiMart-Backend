@@ -2,11 +2,12 @@ from cart.models import Cart,CartItem
 from django.db.models import F,Sum
 from django.db import transaction
 from .models import Order,OrderItem
+from rest_framework.exceptions import PermissionDenied,ValidationError
 
 
 class OrderService:
+
     @staticmethod
-    
     def create_order(user_id,cart_id):
         with transaction.atomic():
             cart = Cart.objects.select_for_update().get(id=cart_id)
@@ -38,3 +39,21 @@ class OrderService:
 
             cart.cartitems.all().delete()
             return order
+        
+    @staticmethod
+    def cancel_order(order,user):
+        if user.is_staff:
+            order.status='canceled'
+            order.save()
+            return order
+        
+        if order.user != user :
+            raise PermissionDenied({'detail':'You can cancel only your own order'})
+        
+        if order.status == 'delivered':
+            raise ValidationError({'detail':'Your order already delivered so can not cancel at this time'})
+
+        order.status='canceled'
+        order.save()
+        return order
+
