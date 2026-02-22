@@ -34,18 +34,20 @@ class CartModelViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
     #     return {'user':self.request.user }
     
     def get_queryset(self):
+        
         return Cart.objects.filter(user=self.request.user)
+        
     
     def create(self, request, *args, **kwargs):
         cart, created = Cart.objects.get_or_create(
             user=request.user
         )
-
         serializer = self.get_serializer(cart)
 
         if created:
             return Response(serializer.data, status=201)
         return Response(serializer.data, status=200)
+    
 
 class CartItemModelView(ModelViewSet):
     http_method_names=['get','post','patch','delete']
@@ -59,10 +61,12 @@ class CartItemModelView(ModelViewSet):
         return CartItemSerializer
     
     def get_serializer_context(self):
-        return {'cart_pk':self.kwargs.get('cart_pk')}
+        return {'cart_pk':self.kwargs.get('cart_pk'),'request':self.request}
     
     def get_queryset(self):
-        return CartItem.objects.prefetch_related('product').filter(cart=self.kwargs['cart_pk'])    
+        return CartItem.objects.select_related('product').filter(cart=self.kwargs['cart_pk']) 
+    
+     
 
     
 

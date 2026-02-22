@@ -40,6 +40,16 @@ class AddCartItemSerializer(serializers.ModelSerializer):
         if not Product.objects.filter(pk=value).exists():
             raise serializers.ValidationError(f'{value} DoesNotExists')
         return value
+    
+    def validate(self, data):
+        cart_id = self.context['cart_pk']
+        user = self.context['request'].user
+
+        if not Cart.objects.filter(id=cart_id, user=user).exists():
+            raise serializers.ValidationError(
+                "Cart does not exist for this user."
+            )
+        return data
 
 class CartItemSerializer(serializers.ModelSerializer):
     product=SimpleProductSerializer(read_only=True)

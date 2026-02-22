@@ -34,6 +34,8 @@ class ProductsModelViewSet(ModelViewSet):
 
 class ReviewModelViewSet(ModelViewSet):
     serializer_class=ReviewSerializer
+    permission_classes=[permissions.IsAdminOrReadOnly]
+    pagination_class=DefaultPagination
     
     def get_queryset(self):
         reviews=Review.objects.all()

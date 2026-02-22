@@ -47,11 +47,11 @@ class SimpleUserSerializer(serializers.ModelSerializer):
         return user.get_full_name()
 
 class ReviewSerializer(serializers.ModelSerializer):
-    user=SimpleUserSerializer()
+    user=SimpleUserSerializer(read_only=True)
     class Meta:
         model=Review
         fields=['id','product','user','description','rating','created_at']
-        read_only_fields=['product','user']
+        read_only_fields=['product']
 
     def create(self, validated_data):
         product_pk=self.context['product_pk']
