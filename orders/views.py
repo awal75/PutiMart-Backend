@@ -1,16 +1,22 @@
 from rest_framework.viewsets import ModelViewSet
 from .models import Order,OrderItem
-from .serializers import OrderSerializer,SimpleItem,CreateOrderSerializer
+from .serializers import OrderSerializer,SimpleItem,CreateOrderSerializer,UpdateOrderSerializer
 from rest_framework import permissions
 
 class OrderModelViewSet(ModelViewSet):
     permission_classes=[permissions.IsAuthenticated]
-    http_method_names=['get','post','patch','delete']
+    http_method_names=['get','post','patch','delete','head','options']
 
     def get_serializer_class(self):
-       if self.request.method=='POST':
-          return CreateOrderSerializer  
-       return OrderSerializer
+         if self.request.method=='POST':
+            return CreateOrderSerializer 
+         elif self.request.method=='PATCH':
+            return UpdateOrderSerializer
+         return OrderSerializer
+    def get_permissions(self):
+       if self.request.method in ['POST','DELETE']:
+          return [permissions.IsAdminUser()]
+       return [permissions.IsAuthenticated()]
     
     def get_serializer_context(self):
          return {'request': self.request}
