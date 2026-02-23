@@ -2,10 +2,24 @@ from rest_framework.viewsets import ModelViewSet
 from .models import Order,OrderItem
 from .serializers import OrderSerializer,SimpleItem,CreateOrderSerializer,UpdateOrderSerializer
 from rest_framework import permissions
+from rest_framework.decorators import action
+from .service import OrderService
+from rest_framework.response import Response
 
 class OrderModelViewSet(ModelViewSet):
     permission_classes=[permissions.IsAuthenticated]
     http_method_names=['get','post','patch','delete','head','options']
+
+    @action(detail=True,methods=['post'],permission_classes=[permissions.IsAuthenticated])
+    def cancel(self,request,pk=None):
+       order=Order.objects.get(pk=pk)
+       order=OrderService.cancel_order(order=order,user=self.request.user)
+       serializer=self.get_serializer(order)
+       return Response(serializer.data,status=200)
+
+
+
+
 
     def get_serializer_class(self):
          if self.request.method=='POST':

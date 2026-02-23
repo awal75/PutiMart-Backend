@@ -56,4 +56,13 @@ class OrderService:
         order.status='canceled'
         order.save()
         return order
+    
+    @staticmethod
+    def update_order_status(order,user,status):
+        if user.is_staff :
+            order.status=status
+            order.save()
+            return order
+        
+        raise PermissionDenied({'detail':'you can not change status'})
 
