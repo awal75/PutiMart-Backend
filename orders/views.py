@@ -17,6 +17,11 @@ class OrderModelViewSet(ModelViewSet):
        
        return Response({'detail':'Order canceled'},status=200)
     
+    @action(detail=True,methods=['post'],permission_classes=[permissions.IsAdminUser],url_name='update-status')
+    def update_status(self,request,pk=None):
+       order=self.get_object()
+       
+    
 
 
 
