@@ -12,10 +12,11 @@ class OrderModelViewSet(ModelViewSet):
 
     @action(detail=True,methods=['post'],permission_classes=[permissions.IsAuthenticated])
     def cancel(self,request,pk=None):
-       order=Order.objects.get(pk=pk)
-       order=OrderService.cancel_order(order=order,user=self.request.user)
-       serializer=self.get_serializer(order)
-       return Response(serializer.data,status=200)
+       order=self.get_object()
+       OrderService.cancel_order(order=order,user=self.request.user)
+       
+       return Response({'detail':'Order canceled'},status=200)
+    
 
 
 
