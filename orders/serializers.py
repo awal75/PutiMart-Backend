@@ -5,6 +5,8 @@ from cart.models import Cart,CartItem
 from .service import OrderService
 
 
+class EmptySerializer(serializers.Serializer):
+    pass
 
 class SimpleItem(serializers.ModelSerializer):
     product=SimpleProductSerializer(read_only=True)
@@ -40,21 +42,6 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
         model=Order
         fields=['status']
 
-    def update(self, instance, validated_data):
-        status=validated_data['status']
-        user=self.context['request'].user
-
-        if status=='canceled':
-            return OrderService.cancel_order(order=instance,user=user)
-        
-        if not user.is_staff:
-            raise serializers.ValidationError({'detail':'You can only canceled status'})
-        
-        # instance.status=status
-        # instance.save()
-        # return instance
-
-        return super().update(instance, validated_data)
     
 class OrderSerializer(serializers.ModelSerializer):
     orderitems=SimpleItem(many=True,read_only=True)
