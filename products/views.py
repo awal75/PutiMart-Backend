@@ -35,10 +35,13 @@ class ProductImageModelViewSet(ModelViewSet):
     serializer_class=ProductImageSerializer
 
     def get_queryset(self):
-        return ProductImage.objects.filter(product=self.kwargs['product_pk'])
+        product_id=self.kwargs['product_pk']
+     
+        return ProductImage.objects.filter(product_id=product_id)
     
     def perform_create(self, serializer):
-        return serializer.save(product=self.kwargs['product_pk'])
+        product=get_object_or_404(Product,pk = self.kwargs['product_pk'])
+        return serializer.save(product=product)
     
 
 class ReviewModelViewSet(ModelViewSet):
