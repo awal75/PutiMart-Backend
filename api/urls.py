@@ -14,6 +14,8 @@ router.register(r'orders',OrderModelViewSet,basename='orders')
 
 categories_router=NestedDefaultRouter(router,r'categories',lookup='category')
 categories_router.register(r'products',views.ProductsModelViewSet,basename='category-products')
+product_image_router=NestedDefaultRouter(router,r'products',lookup='product')
+product_image_router.register(r'images',views.ProductImageModelViewSet,basename='product-images')
 preoducts_review_router=NestedDefaultRouter(router,r'products',lookup='product')
 preoducts_review_router.register(r'reviews',views.ReviewModelViewSet,basename='product-reviews')
 
@@ -33,6 +35,7 @@ urlpatterns = [
     path('',include(categories_router.urls)),
     path('',include(preoducts_review_router.urls)),
     path('',include(carts_router.urls)),
+    path('',include(product_image_router.urls))
     # path('',include(order_router.urls))
 
 ]

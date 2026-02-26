@@ -1,8 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Product,Category,Review
-from .serializers import ProductSerializer,CategorySerializer,ReviewSerializer
+from .models import Product,Category,Review,ProductImage
+from .serializers import ProductSerializer,CategorySerializer,ReviewSerializer,ProductImageSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from django.db.models import Count
@@ -30,6 +30,15 @@ class ProductsModelViewSet(ModelViewSet):
     ordering_fields=['price','updated_at']
     pagination_class=DefaultPagination
     permission_classes=(permissions.IsAdminOrReadOnly,)
+
+class ProductImageModelViewSet(ModelViewSet):
+    serializer_class=ProductImageSerializer
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product=self.kwargs['product_pk'])
+    
+    def perform_create(self, serializer):
+        return serializer.save(product=self.kwargs['product_pk'])
     
 
 class ReviewModelViewSet(ModelViewSet):
