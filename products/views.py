@@ -33,6 +33,7 @@ class ProductsModelViewSet(ModelViewSet):
 
 class ProductImageModelViewSet(ModelViewSet):
     serializer_class=ProductImageSerializer
+    permission_classes=[permissions.IsAdminOrReadOnly]
 
     def get_queryset(self):
         product_id=self.kwargs['product_pk']
