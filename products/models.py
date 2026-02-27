@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator,MinValueValidator
+from products.validators import max_file_size
 
 User=get_user_model()
 
@@ -29,7 +30,7 @@ class Product(models.Model):
     
 class ProductImage(models.Model):
     product=models.ForeignKey(Product,on_delete=models.CASCADE,related_name='product_images')
-    image=models.ImageField(upload_to='products/images/')
+    image=models.ImageField(upload_to='products/images/',validators=[max_file_size])
 
     def __str__(self):
      return f"Image for {self.product.title}"
