@@ -12,34 +12,28 @@ class CategorySerializer(serializers.ModelSerializer):
         model=Category
         fields=['id','name','description','product_count']
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ProductImage
+        fields=['id','image']
 
 class ProductSerializer(serializers.ModelSerializer):
-    category=serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(),
-        write_only=True
-        )
-    # category=CategorySerializer(read_only=True)
-    # category=serializers.HyperlinkedRelatedField(
-    #     view_name='view-specfic-category',
-    #     queryset=Category.objects.all()
-
-    #  )
+   
     price_tax=serializers.SerializerMethodField(
         method_name='get_price_with_tax',
     )
+    images=ProductImageSerializer(many=True,read_only=True,source='product_images')
+    category=CategorySerializer(read_only=True)
 
     class Meta:
         model=Product
-        fields=['id','name','description','price','price_tax','stock','image','category','created_at','updated_at','is_active']
+        fields=['id','name','description','price','price_tax','stock','category','created_at','updated_at','is_active','images']
         
 
     def get_price_with_tax(self,product):
         return round(product.price*Decimal('1.10'),2)
     
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=ProductImage
-        fields=['id','image']
+
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
