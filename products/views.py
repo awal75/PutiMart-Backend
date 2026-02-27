@@ -23,13 +23,15 @@ class CategoryModelViewSet(ModelViewSet):
 
 class ProductsModelViewSet(ModelViewSet):
     serializer_class=ProductSerializer
-    queryset=Product.objects.all()
     filter_backends=[DjangoFilterBackend,SearchFilter,OrderingFilter]
     filterset_class=ProductFilter
     search_fields=['name','description','category__name']
     ordering_fields=['price','updated_at']
     pagination_class=DefaultPagination
     permission_classes=(permissions.IsAdminOrReadOnly,)
+
+    def get_queryset(self):
+        return Product.objects.select_related('category').prefetch_related('product_images')
 
 class ProductImageModelViewSet(ModelViewSet):
     serializer_class=ProductImageSerializer
