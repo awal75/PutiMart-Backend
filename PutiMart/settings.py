@@ -54,6 +54,9 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'django_filters',
+
+
+    # 'django_cleanup.apps.CleanupConfig',
 ]
 
 # for custom user model 
