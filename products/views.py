@@ -64,12 +64,12 @@ class ProductImageModelViewSet(ModelViewSet):
     permission_classes=[permissions.IsAdminOrReadOnly]
 
     def get_queryset(self):
-        product_id=self.kwargs['product_pk']
+        product_id=self.kwargs.get('product_pk')
      
         return ProductImage.objects.filter(product_id=product_id)
     
     def perform_create(self, serializer):
-        product=get_object_or_404(Product,pk = self.kwargs['product_pk'])
+        product=get_object_or_404(Product,pk = self.kwargs.get('product_pk'))
         return serializer.save(product=product)
     
 
@@ -105,7 +105,7 @@ class ReviewModelViewSet(ModelViewSet):
     
     def get_serializer_context(self):
         return {
-            'product_pk':self.kwargs['product_pk'],
+            'product_pk':self.kwargs.get('product_pk'),
             'request':self.request
                 
                 }

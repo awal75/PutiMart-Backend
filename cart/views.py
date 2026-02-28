@@ -35,6 +35,8 @@ class CartModelViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
     #     return {'user':self.request.user }
     
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return Cart.objects.none()
         
         return Cart.objects.filter(user=self.request.user)
         
@@ -62,10 +64,12 @@ class CartItemModelView(ModelViewSet):
         return CartItemSerializer
     
     def get_serializer_context(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return super().get_serializer_context()
         return {'cart_pk':self.kwargs.get('cart_pk'),'request':self.request}
     
     def get_queryset(self):
-        return CartItem.objects.select_related('product').filter(cart=self.kwargs['cart_pk']) 
+        return CartItem.objects.select_related('product').filter(cart=self.kwargs.get('cart_pk')) 
     
      
 

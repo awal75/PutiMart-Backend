@@ -11,6 +11,8 @@ class OrderModelViewSet(ModelViewSet):
 
     @action(detail=True,methods=['post'])
     def cancel(self,request,pk=None):
+       if getattr(self, 'swagger_fake_view', False):
+        return {}
        order=self.get_object()
        OrderService.cancel_order(order=order,user=self.request.user)
        
@@ -39,10 +41,15 @@ class OrderModelViewSet(ModelViewSet):
        return [permissions.IsAuthenticated()]
     
     def get_serializer_context(self):
+         if getattr(self, 'swagger_fake_view', False):
+            return {}
          return {'request': self.request}
     
 
     def get_queryset(self):
+     if getattr(self,'swagger_fake_view',False):
+      return Order.objects.none()
+
      if self.request.user.is_staff:
         return Order.objects.prefetch_related('orderitems','orderitems__product')
      return Order.objects.prefetch_related('orderitems','orderitems__product').filter(user=self.request.user)
