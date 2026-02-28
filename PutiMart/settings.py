@@ -162,13 +162,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 
-# SWAGGER_SETTINGS = {
-#    'SECURITY_DEFINITIONS': {
-#       'Bearer': {
-#             'type': 'apiKey',
-#             'name': 'Authorization',
-#             'in': 'header',
-#             'description':'Enter your JWT token in the format:`JWT <example_token>`'
-#       }
-#    }
-# }
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description':'Enter your JWT token in the format:`JWT <example_token>`'
+      }
+   }
+}
