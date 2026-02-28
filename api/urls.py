@@ -8,7 +8,6 @@ from orders.views import OrderModelViewSet,OrderItemModelViewSet
 router=DefaultRouter()
 router.register(r'products',views.ProductsModelViewSet,basename='products')
 router.register(r'categories',views.CategoryModelViewSet,basename='categories')
-router.register(r'reviews',views.ReviewModelViewSet,basename='reviews')
 router.register(r'carts',CartModelViewSet,basename='carts')
 router.register(r'orders',OrderModelViewSet,basename='orders')
 

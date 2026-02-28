@@ -44,9 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'rest_framework',
-    'rest_framework_simplejwt',
     'djoser',
+    'rest_framework_simplejwt',
     "debug_toolbar",
     'api',
     'authentications',
@@ -158,3 +159,16 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+
+# SWAGGER_SETTINGS = {
+#    'SECURITY_DEFINITIONS': {
+#       'Bearer': {
+#             'type': 'apiKey',
+#             'name': 'Authorization',
+#             'in': 'header',
+#             'description':'Enter your JWT token in the format:`JWT <example_token>`'
+#       }
+#    }
+# }
