@@ -1,27 +1,39 @@
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from .models import Product,Category,Review,ProductImage
 from .serializers import ProductSerializer,CategorySerializer,ReviewSerializer,ProductImageSerializer
-from rest_framework import status
-from rest_framework.views import APIView
-from django.db.models import Count
-from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ProductFilter
 from rest_framework.filters import SearchFilter,OrderingFilter
 from .paginations import DefaultPagination
-# from rest_framework import permissions
 from api import permissions
 
 class CategoryModelViewSet(ModelViewSet):
+    """
+    Category API Endpoint.
+
+    This endpoint allows:
+    - Admin users to create, update and delete categories.
+    - All users to view category list and details.
+    - Manage product categories efficiently.
+    """
     queryset=Category.objects.all()
     serializer_class=CategorySerializer
     permission_classes=(permissions.IsAdminOrReadOnly,)
 
 
 class ProductsModelViewSet(ModelViewSet):
+    """
+    Products API Endpoint.
+
+    This endpoint allows:
+    - Admin users to create, update and delete products.
+    - All users to view products.
+    - Filtering by custom ProductFilter.
+    - Searching by name, description and category name.
+    - Ordering by price and updated_at.
+    - Optimized queries using select_related and prefetch_related.
+    """
     serializer_class=ProductSerializer
     filter_backends=[DjangoFilterBackend,SearchFilter,OrderingFilter]
     filterset_class=ProductFilter
@@ -34,6 +46,20 @@ class ProductsModelViewSet(ModelViewSet):
         return Product.objects.select_related('category').prefetch_related('product_images')
 
 class ProductImageModelViewSet(ModelViewSet):
+    """
+    Product Image API Endpoint.
+
+    This endpoint allows:
+    - Viewing all images of a specific product.
+    - Admin users to upload new product images.
+    - Admin users to delete product images.
+
+    Nested route:
+        /products/{product_pk}/images/
+
+    Automatically associates:
+    - Uploaded image with product using product_pk from URL.
+    """
     serializer_class=ProductImageSerializer
     permission_classes=[permissions.IsAdminOrReadOnly]
 
@@ -48,6 +74,22 @@ class ProductImageModelViewSet(ModelViewSet):
     
 
 class ReviewModelViewSet(ModelViewSet):
+    """
+    Review API Endpoint.
+
+    This endpoint allows:
+    - Users to view reviews for a specific product.
+    - Authenticated users to create reviews.
+    - Admin users to update and delete reviews.
+    - Pagination support for large review lists.
+
+    Nested under Product:
+    /products/{product_pk}/reviews/
+
+    Automatically assigns:
+    - Logged-in user as review author.
+    - Product based on product_pk from URL.
+    """
     serializer_class=ReviewSerializer
     permission_classes=[permissions.IsAdminOrReadOnly]
     pagination_class=DefaultPagination
