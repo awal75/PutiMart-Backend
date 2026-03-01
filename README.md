@@ -36,9 +36,12 @@ The project follows a clean layered architecture with Nested Routers, Djoser aut
 ---
 
 ## 📂 Project Structure
-
+```bash
 PutiMart/
 │
+├── api/
+│   ├── urls.py
+|
 ├── products/
 │   ├── models.py
 │   ├── serializers.py
@@ -61,6 +64,7 @@ PutiMart/
 │   ├── service.py
 │
 └── manage.py
+```
 
 ---
 
