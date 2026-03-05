@@ -7,7 +7,7 @@
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "putimart/wsgi.py"
+        "dest": "PutiMart/wsgi.py"
       }
     ]
 }
