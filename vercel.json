@@ -1,12 +1,9 @@
 {
-    "builds": [{
-      "src": "PutiMart/wsgi.py",
-      "use": "@vercel/python"
-    }],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "PutiMart/wsgi.py"
-      }
-    ]
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "PutiMart/wsgi.py"
+    }
+  ]
 }
