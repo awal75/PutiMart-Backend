@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 #for vercel
 ALLOWED_HOSTS = [".vercel.app","127.0.0.1","localhost"]
@@ -114,8 +114,10 @@ SIMPLE_JWT = {
 
 DJOSER={
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
+    # "SEND_ACTIVATION_EMAIL": True,
+    # "SEND_CONFIRMATION_EMAIL": True,
+    # "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
     'SERIALIZERS': {
         'user_create': 'authentications.serializers.UserCreateSerializer',
         'current_user': 'authentications.serializers.UserSerializer',
