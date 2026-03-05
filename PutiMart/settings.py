@@ -115,14 +115,17 @@ SIMPLE_JWT = {
 DJOSER={
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
-    # "SEND_ACTIVATION_EMAIL": True,
-    # "SEND_CONFIRMATION_EMAIL": True,
-    # "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
+    "SEND_ACTIVATION_EMAIL": True,
+    "SEND_CONFIRMATION_EMAIL": True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
     'SERIALIZERS': {
         'user_create': 'authentications.serializers.UserCreateSerializer',
         'current_user': 'authentications.serializers.UserSerializer',
         }
 }
+AUTHENTICATION_BACKENDS = [
+    "djoser.auth_backends.LoginFieldBackend",
+]
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
