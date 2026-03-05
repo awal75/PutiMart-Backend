@@ -28,14 +28,17 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+#for vercel
 ALLOWED_HOSTS = [".vercel.app","127.0.0.1","localhost"]
-
+ROOT_URLCONF='PutiMart.urls'
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5174',
+]
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",
     # ...
 ]
-
 
 # Application definition
 
